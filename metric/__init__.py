@@ -13,14 +13,6 @@ Fred Castruccio, NCAR (fredc@ucar.edu)
 
 from pkg_resources import DistributionNotFound, get_distribution
 
-from .metric import *
-#from .utils import *
-#from .sections import *
-#from .geostrophy import *
-import metric.utils
-import metric.sections
-import metric.geostrophy
-
 try:
     __version__ = get_distribution(__name__).version
 except DistributionNotFound:
