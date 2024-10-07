@@ -10,11 +10,6 @@ Author:
 Fred Castruccio, NCAR (fredc@ucar.edu)
 """
 
-
-from pkg_resources import DistributionNotFound, get_distribution
-
-try:
-    __version__ = get_distribution(__name__).version
-except DistributionNotFound:
-    # package is not installed
-    pass
+__version__ = "0.1.1"
+__author__ = 'Fred Castruccio (fredc@ucar.edu) | Chris Roberts (chris.roberts@ecmwf.int)'
+__credits__ = 'NCAR | ECMWF'
