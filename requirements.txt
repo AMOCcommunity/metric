@@ -5,3 +5,6 @@ ConfigParser
 argparse
 matplotlib
 gsw
+xarray
+dask
+h5netcdf
