@@ -6,3 +6,6 @@ metric.egg-info/
 
 # Ignore pychache directories:
 __pycache__/
+
+# Ignore test files:
+*.ipynb
