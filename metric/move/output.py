@@ -67,11 +67,14 @@ def create_netcdf(config, move_trans, model_trans, bdry_trans, int_trans, int_mo
     xbdim = dataset.createDimension('xbounds', move_trans.xbounds.size)
     tdim = dataset.createDimension('time', None)
 
-    # Create time variable
+    # Create time coordinate:
     time = dataset.createVariable('time',np.float64,(tdim.name,))
-    time.units = 'hours since 0001-01-01 00:00:00.0'
+    time.units = 'seconds since 1900-01-01 00:00:00.0'
     time.calendar = 'gregorian'
-    time[:] = date2num(move_trans.dates, time.units, calendar=time.calendar)
+    # Calculate timestamp in seconds since 1900-01-01:
+    timestamp = ((move_trans.dates - np.datetime64('1900-01-01T00:00:00'))
+                 / np.timedelta64(1, 's'))
+    time[:] = timestamp
 
     # Create z variable
     z = dataset.createVariable('z',np.float64,(zdim.name,))

@@ -69,11 +69,14 @@ def create_netcdf(config, rapid_trans, model_trans, fc_trans,
     xbdim = dataset.createDimension('xbounds', rapid_trans.xbounds.size)
     tdim = dataset.createDimension('time', None)
 
-    # Create time coordinate
+    # Create time coordinate:
     time = dataset.createVariable('time',np.float64,(tdim.name,))
-    time.units = 'hours since 0001-01-01 00:00:00.0'
+    time.units = 'seconds since 1900-01-01 00:00:00.0'
     time.calendar = 'gregorian'
-    time[:] = date2num(rapid_trans.dates, time.units, calendar=time.calendar)
+    # Calculate timestamp in seconds since 1900-01-01:
+    timestamp = ((rapid_trans.dates - np.datetime64('1900-01-01T00:00:00'))
+                 / np.timedelta64(1, 's'))
+    time[:] = timestamp
 
     # Create depth coordinate
     z = dataset.createVariable('z',np.float64,(zdim.name,))
