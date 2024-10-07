@@ -6,14 +6,14 @@ metric command line script
 
 
 import sys
-from .metric import compute_amoc_transport
-
-
+from metric.metric import compute_amoc_transport
 
 def main():
 
   args = dict(zip(sys.argv[1::2],sys.argv[2::2]))
-
+  print("============================================")
+  print("------------- Running Metric ---------------")
+  print("============================================")
   print('')
   print('')
   if 'move' in args['-c']:
@@ -47,3 +47,9 @@ def main():
   print('')
   print('Done')
 
+if __name__ == '__main__':
+    try:
+        main()
+    except KeyboardInterrupt as err:
+        print(err)
+        sys.exit()
