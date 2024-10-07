@@ -1,0 +1,8 @@
+# Ignore setuptools build directories:
+.eggs/
+build/
+dist/
+metric.egg-info/
+
+# Ignore pychache directories:
+__pycache__/
