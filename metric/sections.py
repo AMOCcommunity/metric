@@ -10,7 +10,6 @@ Updated by: Ollie Tooth
 Date: 2024-10-04
 """
 # -- Import required packages -- #
-from functools import partial
 from math import radians, cos, sin, asin, sqrt
 import xarray as xr
 import numpy as np
