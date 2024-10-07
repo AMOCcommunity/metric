@@ -3,18 +3,44 @@ Meridional ovErTurning ciRculation diagnostIC (METRIC)
 
 METRIC is a fork of the `RapidMoc <https://github.com/cdr30/RapidMoc>`_ package, which extends the calculation of observation-style transports to other observing arrays.
 
-The METRIC python module enables consistent calculations of Atlantic meridional overturning circulation (AMOC) 
-estimates at various observational arrays from ocean general circulation models. To make the most appropriate comparisons, 
-the package evaluates the model meridional overturning circulation using analogous observation-style methods.
-The current version allows AMOC estimates at the RAPID (26.5N) site, the MOVE (16N) site, and the SAMBA (34.5S) site. 
-METRIC also includes a few additional, alternative approaches to calculate these transports.
+The METRIC python package enables consistent calculations of Atlantic meridional overturning circulation (AMOC) 
+estimates at various observational arrays from ocean general circulation models. To make the most appropriate comparisons, the package evaluates the model meridional overturning circulation using analogous observation-style methods.
 
+The current version allows AMOC estimates at the RAPID (26.5N) site, the MOVE (16N) site, and the SAMBA (34.5S) site. METRIC also includes a few additional, alternative approaches to calculate these transports.
 
-Installation
-------------
+In this latest version, the package has been updated to work with the latest versions of xarray and dask to allow users to calculate AMOC estimates from large multi-file datasets.
 
-python setup.py install
+Using METRIC
+-------------
 
+**Installing the updated METRIC package:**
+
+.. code-block:: bash
+   pip install git@github.com:oj-tooth/metric.git
+
+**Downloading the code:**
+.. code-block:: bash
+   git clone git@github.com:oj-tooth/metric.git
+
+**Running the code:**
+.. code-block:: bash
+   ./run_metric.py
+   usage: run_metric.py [-c] [-t] [-s] [-v] [-ssh] [-taux]
+
+   Calculate AMOC estimates at the RAPID, MOVE, and SAMBA sites using the observation-style method.
+
+   positional arguments:
+   -c     Path to configuration file
+   -t     Path to netcdf file containing temperature data. 
+   -s     Path to netcdf file containing salinity data.
+   -v     Path to netcdf file containing meridional velocity data.
+   -ssh   Path to netcdf file containing sea surface height data.
+   -taux  Path to netcdf file containing zonal wind stress data.
+
+   optional arguments:
+      --outdir Path to output directory (overwrites configuration file).
+      --name   Name of the output file (overwrites configuration file).
+      --shift  Shift output dates for plotting.
 
 Citation
 --------
