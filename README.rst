@@ -13,17 +13,18 @@ In this latest version, the package has been updated to work with the latest ver
 Using METRIC
 -------------
 
-**Installing the updated METRIC package:**
-
-.. code-block:: bash
-   pip install git@github.com:oj-tooth/metric.git
-
 **Downloading the code:**
-.. code-block:: bash
+.. code-block:: console
    git clone git@github.com:oj-tooth/metric.git
 
+**Installing the updated METRIC package:**
+
+.. code-block:: console
+   cd metric
+   pip install -e .
+
 **Running the code:**
-.. code-block:: bash
+.. code-block:: console
    ./run_metric.py
    usage: run_metric.py [-c] [-t] [-s] [-v] [-ssh] [-taux]
 
