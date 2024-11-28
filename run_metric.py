@@ -22,7 +22,7 @@ def main():
     print('Run RAPID AMOC transport computation using:')
   elif 'samba' in args['-c']:
     print('Run SAMBA SAMOC transport computation using:')
-  for key in args.keys(): 
+  for key in args.keys():
     if key == '-c':
       print('Path to config file: {}'.format(args[key]))
     if key == '-t':
