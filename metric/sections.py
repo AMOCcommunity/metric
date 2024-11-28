@@ -15,6 +15,10 @@ import xarray as xr
 import numpy as np
 import copy
 import glob
+import os
+import json
+import dask
+from dask.distributed import LocalCluster, Client
 
 class MaskError(Exception):
     pass
@@ -73,6 +77,15 @@ class ZonalSections(object):
             self.surface_field = True
             self.zcoord = None
 
+        if config.has_option('options', 'use_dask'):
+            self.use_dask = config.get('options', 'use_dask')
+            if self.use_dask == 'True':
+                self.use_dask = True
+                self.dask_kwargs = json.loads(config.get('options', 'dask_kwargs').replace("'", "\""))
+            else:
+                self.use_dask = False
+        else:
+            self.use_dask = False
         # Read variable data & coordinate dimensions:
         self._read_data()
 
@@ -315,7 +328,7 @@ class ZonalSections(object):
     def _read_mask(self):
         """ Read mask data from netcdf file(s) """
         # Open netcdf file and read mask data:
-        ds = xr.open_dataset(self.maskf, engine='h5netcdf')
+        ds = xr.open_dataset(self.maskf, engine='netcdf4')
         maskvar = ds[self.maskvar]
         if maskvar.ndim == 4: # If time dim present in mask field
             mask = maskvar[0,:,self.j1:self.j2+1, self.i1:self.i2+1] == self.maskmdi
@@ -359,12 +372,28 @@ class ZonalSections(object):
     def _read_data(self):
         """ Read variable & coordinate data from netcdf file(s) """
         if len(glob.glob(self.file)) > 1:
-            # Open multiple netcdf files as dataset using pre-processing function & load into memory:
-            data = xr.open_mfdataset(paths=self.file, preprocess=self._extract_section, engine='h5netcdf').load()
-            data = data[self.var]
+            if self.use_dask:
+                # Set dask temporary and local directories to current working directory:
+                dask.config.set({'temporary_directory': os.getcwd(), 'local_directory':os.getcwd()})
+                print(f"In Progress: Reading {self.var} from multiple .nc files with dask ...")
+                # Open dask cluster and client to read multiple netcdf files:
+                with LocalCluster(**self.dask_kwargs) as cluster, Client(cluster) as client: 
+                    data = xr.open_mfdataset(paths=self.file, preprocess=self._extract_section, engine='netcdf4', parallel=True)
+                    data = data[self.var].load()
+                    print(f"... Completed: Read {self.var} from multiple .nc files with dask.")
+                    # Shutdown dask client and close cluster:
+                    client.shutdown()
+                    client.close()
+                    print("-- Dask client closed --")
+            else:
+                print(f"In Progress: Reading {self.var} from multiple .nc files without dask ...")
+                # Open multiple netcdf files as dataset using pre-processing function & load into memory:
+                data = xr.open_mfdataset(paths=self.file, preprocess=self._extract_section, engine='netcdf4').load()
+                data = data[self.var]
+                print(f"... Completed: Read {self.var} from multiple .nc files without dask.")
         else:
             # Open single netcdf file as dataset:
-            ds = xr.open_dataset(self.file, engine='h5netcdf')
+            ds = xr.open_dataset(self.file, engine='netcdf4')
             # Apply post-processing function to extract variable data:
             data = self._extract_section(ds)
 
