@@ -9,3 +9,7 @@ __pycache__/
 
 # Ignore test files:
 *.ipynb
+
+# Ignore dask and output directories:
+dask-worker-space/
+output/
