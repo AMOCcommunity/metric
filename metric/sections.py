@@ -367,6 +367,10 @@ class ZonalSections(object):
         else:
             # Extract 3D field data [time, z, y, x]:
             ds = ds[self.var][:, :, self.j1:self.j2+1, self.i1:self.i2+1]
+
+        if not isinstance(ds.time_counter.dtype, np.datetime64):
+            ds['time_counter'] = ds.indexes['time_counter'].to_datetimeindex()
+
         return ds
 
     def _read_data(self):
@@ -388,14 +392,14 @@ class ZonalSections(object):
             else:
                 print(f"In Progress: Reading {self.var} from multiple .nc files without dask ...")
                 # Open multiple netcdf files as dataset using pre-processing function & load into memory:
-                data = xr.open_mfdataset(paths=self.file, preprocess=self._extract_section, engine='netcdf4').load()
-                data = data[self.var]
+                data = xr.open_mfdataset(paths=self.file, preprocess=self._extract_section, engine='netcdf4')
+                data = data[self.var].load()
                 print(f"... Completed: Read {self.var} from multiple .nc files without dask.")
         else:
             # Open single netcdf file as dataset:
-            ds = xr.open_dataset(self.file, engine='netcdf4')
+            data = xr.open_dataset(self.file, engine='netcdf4')
             # Apply post-processing function to extract variable data:
-            data = self._extract_section(ds)
+            data = self._extract_section(data)
 
         # Store coordinate dimensions as attributes:
         if self.surface_field:
