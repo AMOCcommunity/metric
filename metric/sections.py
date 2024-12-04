@@ -369,7 +369,7 @@ class ZonalSections(object):
             ds = ds[self.var][:, :, self.j1:self.j2+1, self.i1:self.i2+1]
 
         if not isinstance(ds.time_counter.dtype, np.datetime64):
-            ds['time_counter'] = ds.indexes['time_counter'].to_datetimeindex()
+            ds[self.tcoord] = ds.indexes[self.tcoord].to_datetimeindex()
 
         return ds
 
