@@ -13,11 +13,11 @@ GLOBIGNORE="*"
 
 # -- Input arguments to ./run_metric -- #
 # Filepaths to config file:
-fpath_config=/home/otooth/work/Diagnostics/proj_NPD_diag/metric/configs/npd/eORCA025/config_RAPID_eORCA025.ini
+fpath_config=/dssgfs01/working/otooth/Diagnostics/proj_NPD_diag/metric/configs/npd/eORCA025/config_RAPID_eORCA025.ini
 # Filepaths to eORCA025 monthly mean output files:
-fpath_T="/home/otooth/work/AtlantiS/jasmin_os/testing/monthly/eORCA025_links/eORCA025_1m_grid_T_*.nc"
-fpath_V="/home/otooth/work/AtlantiS/jasmin_os/testing/monthly/eORCA025_links/eORCA025_1m_grid_V_*.nc"
-fpath_U="/home/otooth/work/AtlantiS/jasmin_os/testing/monthly/eORCA025_links/eORCA025_1m_grid_U_*.nc"
+fpath_T="/dssgfs01/working/otooth/AtlantiS/jasmin_os/msm_os_testing/monthly/eORCA025_links/eORCA025_1m_grid_T_1980*.nc"
+fpath_V="/dssgfs01/working/otooth/AtlantiS/jasmin_os/msm_os_testing/monthly/eORCA025_links/eORCA025_1m_grid_V_1980*.nc"
+fpath_U="/dssgfs01/working/otooth/AtlantiS/jasmin_os/msm_os_testing/monthly/eORCA025_links/eORCA025_1m_grid_U_1980*.nc"
 
 # -- Python Environment -- #
 # Activate miniconda environment:
@@ -28,7 +28,7 @@ conda activate env_metric
 echo "In Progress: Calculating RAPID 26N AMOC Diagnostics..."
 
 # Move to metric directory:
-cd /home/otooth/work/Diagnostics/proj_NPD_diag/metric
+cd /dssgfs01/working/otooth/Diagnostics/proj_NPD_diag/metric
 # Call metric script:
 ./run_metric.py -c $fpath_config -t $fpath_T -s $fpath_T -v $fpath_V -ssh $fpath_T -taux $fpath_U
 
