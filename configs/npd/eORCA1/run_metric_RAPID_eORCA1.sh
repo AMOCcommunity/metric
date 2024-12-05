@@ -13,7 +13,7 @@ GLOBIGNORE="*"
 
 # -- Input arguments to ./run_metric -- #
 # Filepaths to config file:
-fpath_config=/home/otooth/work/Diagnostics/proj_NPD_diag/metric/configs/npd/eORCA1/config_RAPID_eORCA1.ini
+fpath_config=/dssgfs01/working/otooth/Diagnostics/proj_NPD_diag/metric/configs/npd/eORCA1/config_RAPID_eORCA1.ini
 # Filepaths to eORCA1 monthly mean output files:
 fpath_T="/dssgfs01/scratch/otooth/npd/simulations/eORCA1_JRA55/exp_crt_fbk/eORCA1_1m_grid_T_*.nc"
 fpath_V="/dssgfs01/scratch/otooth/npd/simulations/eORCA1_JRA55/exp_crt_fbk/eORCA1_1m_grid_V_*.nc"
@@ -28,7 +28,7 @@ conda activate env_metric
 echo "In Progress: Calculating RAPID 26N AMOC Diagnostics..."
 
 # Move to metric directory:
-cd /home/otooth/work/Diagnostics/proj_NPD_diag/metric
+cd /dssgfs01/working/otooth/Diagnostics/proj_NPD_diag/metric
 # Call metric script:
 ./run_metric.py -c $fpath_config -t $fpath_T -s $fpath_T -v $fpath_V -ssh $fpath_T -taux $fpath_U
 
