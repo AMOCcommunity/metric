@@ -368,7 +368,8 @@ class ZonalSections(object):
             # Extract 3D field data [time, z, y, x]:
             ds = ds[self.var][:, :, self.j1:self.j2+1, self.i1:self.i2+1]
 
-        if not isinstance(ds.time_counter.dtype, np.datetime64):
+        # Convert time coordinate to datetime64 if necessary:
+        if not np.issubdtype(ds.time_counter.dtype, np.datetime64):
             ds[self.tcoord] = ds.indexes[self.tcoord].to_datetimeindex()
 
         return ds
@@ -381,9 +382,10 @@ class ZonalSections(object):
                 dask.config.set({'temporary_directory': os.getcwd(), 'local_directory':os.getcwd()})
                 print(f"In Progress: Reading {self.var} from multiple .nc files with dask ...")
                 # Open dask cluster and client to read multiple netcdf files:
-                with LocalCluster(**self.dask_kwargs) as cluster, Client(cluster) as client: 
-                    data = xr.open_mfdataset(paths=self.file, preprocess=self._extract_section, engine='netcdf4', parallel=True)
-                    data = data[self.var].load()
+                with LocalCluster(**self.dask_kwargs) as cluster, Client(cluster) as client:
+                    print(client.dashboard_link)
+                    ds = xr.open_mfdataset(paths=self.file, preprocess=self._extract_section, engine='h5netcdf', parallel=True)
+                    data = ds[self.var].load()
                     print(f"... Completed: Read {self.var} from multiple .nc files with dask.")
                     # Shutdown dask client and close cluster:
                     client.shutdown()
@@ -392,14 +394,14 @@ class ZonalSections(object):
             else:
                 print(f"In Progress: Reading {self.var} from multiple .nc files without dask ...")
                 # Open multiple netcdf files as dataset using pre-processing function & load into memory:
-                data = xr.open_mfdataset(paths=self.file, preprocess=self._extract_section, engine='netcdf4')
-                data = data[self.var].load()
+                ds = xr.open_mfdataset(paths=self.file, preprocess=self._extract_section, engine='h5netcdf')
+                data = ds[self.var].load()
                 print(f"... Completed: Read {self.var} from multiple .nc files without dask.")
         else:
             # Open single netcdf file as dataset:
-            data = xr.open_dataset(self.file, engine='netcdf4')
+            ds = xr.open_dataset(self.file, engine='h5netcdf')
             # Apply post-processing function to extract variable data:
-            data = self._extract_section(data)
+            data = self._extract_section(ds)
 
         # Store coordinate dimensions as attributes:
         if self.surface_field:
@@ -418,6 +420,8 @@ class ZonalSections(object):
 
         # Replace .data with its ndarray:
         self.data = data.values
+        # Close netcdf file:
+        ds.close()
 
 def interpolate(s1, s2):
     """ Return data in s1 interpolated onto coordinates in s2 """
