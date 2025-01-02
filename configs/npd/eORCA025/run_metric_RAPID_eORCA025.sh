@@ -15,9 +15,9 @@ GLOBIGNORE="*"
 # Filepaths to config file:
 fpath_config=/dssgfs01/working/otooth/Diagnostics/proj_NPD_diag/metric/configs/npd/eORCA025/config_RAPID_eORCA025.ini
 # Filepaths to eORCA025 monthly mean output files:
-fpath_T="/dssgfs01/working/otooth/AtlantiS/jasmin_os/msm_os_testing/monthly/eORCA025_links/eORCA025_1m_grid_T_1980*.nc"
-fpath_V="/dssgfs01/working/otooth/AtlantiS/jasmin_os/msm_os_testing/monthly/eORCA025_links/eORCA025_1m_grid_V_1980*.nc"
-fpath_U="/dssgfs01/working/otooth/AtlantiS/jasmin_os/msm_os_testing/monthly/eORCA025_links/eORCA025_1m_grid_U_1980*.nc"
+fpath_T="/dssgfs01/scratch/otooth/npd_data/simulations/eORCA025_JRA55/exp_npd_v1/T1m/eORCA025_1m_grid_T_*.nc"
+fpath_V="/dssgfs01/scratch/otooth/npd_data/simulations/eORCA025_JRA55/exp_npd_v1/V1m/eORCA025_1m_grid_V_*.nc"
+fpath_U="/dssgfs01/scratch/otooth/npd_data/simulations/eORCA025_JRA55/exp_npd_v1/U1m/eORCA025_1m_grid_U_*.nc"
 
 # -- Python Environment -- #
 # Activate miniconda environment:
