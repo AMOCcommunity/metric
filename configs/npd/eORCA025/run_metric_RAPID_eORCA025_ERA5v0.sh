@@ -14,10 +14,13 @@ GLOBIGNORE="*"
 # -- Input arguments to ./run_metric -- #
 # Filepaths to config file:
 fpath_config=/dssgfs01/working/otooth/Diagnostics/metric/configs/npd/eORCA025/config_RAPID_eORCA025.ini
+
 # Filepaths to eORCA025 monthly mean output files:
-fpath_T="/dssgfs01/scratch/otooth/npd_data/simulations/eORCA025_ERA5/exp_npd_v2/eORCA025_ERA5_1m_grid_T_*.nc"
-fpath_V="/dssgfs01/scratch/otooth/npd_data/simulations/eORCA025_ERA5/exp_npd_v2/eORCA025_ERA5_1m_grid_V_*.nc"
-fpath_U="/dssgfs01/scratch/otooth/npd_data/simulations/eORCA025_ERA5/exp_npd_v2/eORCA025_ERA5_1m_grid_U_*.nc"
+fdir=/dssgfs01/working/otooth/Diagnostics/metric/configs/npd/eORCA025/links/eORCA025_ERA5v0
+
+fpath_T=${fdir}/eORCA025_1m_grid_T_*.nc
+fpath_V=${fdir}/eORCA025_1m_grid_V_*.nc
+fpath_U=${fdir}/eORCA025_1m_grid_U_*.nc
 
 # -- Python Environment -- #
 # Activate miniconda environment:
