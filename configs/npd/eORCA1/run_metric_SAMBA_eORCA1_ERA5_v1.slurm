@@ -23,9 +23,9 @@ GLOBIGNORE="*"
 # Filepaths to config file:
 fpath_config=/dssgfs01/working/otooth/Diagnostics/metric/configs/npd/eORCA1/config_SAMBA_eORCA1.ini
 # Filepaths to eORCA1 monthly mean output files:
-fpath_T="/dssgfs01/scratch/npd/simulations/eORCA1_ERA5_v1/eORCA1_1m_grid_T*.nc"
-fpath_V="/dssgfs01/scratch/npd/simulations/eORCA1_ERA5_v1/eORCA1_1m_grid_V*.nc"
-fpath_U="/dssgfs01/scratch/npd/simulations/eORCA1_ERA5_v1/eORCA1_1m_grid_U*.nc"
+fpath_T="/dssgfs01/scratch/npd/simulations/eORCA1_ERA5_v1/eORCA1_ERA5_1m_grid_T*.nc"
+fpath_V="/dssgfs01/scratch/npd/simulations/eORCA1_ERA5_v1/eORCA1_ERA5_1m_grid_V*.nc"
+fpath_U="/dssgfs01/scratch/npd/simulations/eORCA1_ERA5_v1/eORCA1_ERA5_1m_grid_U*.nc"
 
 # -- Python Environment -- #
 # Activate miniconda environment:
