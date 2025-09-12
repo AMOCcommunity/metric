@@ -368,9 +368,18 @@ class ZonalSections(object):
             # Extract 3D field data [time, z, y, x]:
             ds = ds[self.var][:, :, self.j1:self.j2+1, self.i1:self.i2+1]
 
-        # Convert time coordinate to datetime64 if necessary:
-        if not np.issubdtype(ds.time_counter.dtype, np.datetime64):
-            ds[self.tcoord] = ds.indexes[self.tcoord].to_datetimeindex()
+        # Convert time coordinate to datetime64 if possible:
+        if not np.issubdtype(ds[self.tcoord].dtype, np.datetime64):
+
+            # Reassign time coordinate using time_centered if not CFTimeIndex:
+            if not np.issubdtype(ds[self.tcoord].dtype, xr.CFTimeIndex):
+                # Use time_centered coord if available and is CFTimeIndex:
+                if ('time_centered' in ds.coords) & np.issubdtype(ds['time_centered'].dtype, xr.CFTimeIndex):
+                    ds = ds.assign_coords({self.tcoord: ds['time_centered']})
+                else:
+                    raise ValueError(f"Cannot determine suitable time coordinate of DateTimeIndex or CFTimeIndex dtype from '{self.tcoord}' & 'time_centered'.")
+
+            ds[self.tcoord] = ds.indexes[self.tcoord].to_datetimeindex(time_unit="ns")
 
         return ds
 
