@@ -1,6 +1,8 @@
 """
 Module containing code to work with ocean transports
 
+Authors:
+    - Fred Castruccio
 """
 # -- Import required packages -- #
 import numpy as np

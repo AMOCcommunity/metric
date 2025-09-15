@@ -1,6 +1,9 @@
 """
 Module containing code to work with SAMBA observational data
 
+Authors:
+    - Fred Castruccio
+    - Ollie Tooth
 """
 # -- Import required packages -- #
 import xarray as xr

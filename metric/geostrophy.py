@@ -1,6 +1,8 @@
 """
-Functions for calculating geostrophic currents.
+Module containing functions for calculating geostrophic currents.
 
+Authors:
+    - Fred Castruccio
 """
 
 import numpy as np

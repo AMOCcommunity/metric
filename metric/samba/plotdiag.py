@@ -1,6 +1,8 @@
 """
 Module containing code to plot transport diagnostics for SAMBA
 
+Authors:
+    - Fred Castruccio
 """
 # -- Import required packages -- #
 import numpy as np

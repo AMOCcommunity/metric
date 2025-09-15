@@ -1,6 +1,8 @@
 """
 Module containing code to generate netcdf object for output.
 
+Authors:
+    - Fred Castruccio
 """
 # -- Import required packages -- #
 from netCDF4 import Dataset, default_fillvals

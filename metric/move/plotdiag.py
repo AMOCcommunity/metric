@@ -1,6 +1,8 @@
 """
 Module containing code to plot transport diagnostics for MOVE
 
+Authors:
+    - Fred Castruccio
 """
 # -- Import required packages -- #
 import matplotlib.pyplot as plt

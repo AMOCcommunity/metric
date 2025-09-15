@@ -2,6 +2,8 @@
 Module containing code to plot volume, heat and freshwater
 transport diagnostics for RAPID
 
+Authors:
+    - Fred Castruccio
 """
 # -- Import required packages -- #
 import matplotlib.pyplot as plt

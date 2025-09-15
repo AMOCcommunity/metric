@@ -1,6 +1,9 @@
 """
 Module containing code to work with Rapid observational data
 
+Authors:
+    - Fred Castruccio
+    - Ollie Tooth
 """
 
 import xarray as xr
