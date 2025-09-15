@@ -2,13 +2,10 @@
 Module containing utility functions
 
 """
-
-
+# -- Import required packages -- #
 import argparse as ap
 import configparser
-import copy
 from os import path
-import errno
 
 import numpy as np
 import datetime

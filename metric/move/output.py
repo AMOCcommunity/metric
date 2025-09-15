@@ -2,9 +2,8 @@
 Module containing code to generate netcdf object for output.
 
 """
-
-
-from netCDF4 import Dataset, date2num, default_fillvals
+# -- Import required packages -- #
+from netCDF4 import Dataset, default_fillvals
 import numpy as np
 import os
 

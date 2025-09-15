@@ -6,10 +6,12 @@ and SAMBA array at 34.5S.
 
 METRIC is adapted from RapidMoc by Chris Roberts at ECMWF (chris.roberts@ecmwf.int)
 
-Author:
+Authors:
 Fred Castruccio, NCAR (fredc@ucar.edu)
+Chris Roberts, ECMWF (chris.roberts@ecmwf.int)
+Ollie Tooth, NOC (oliver.tooth@noc.ac.uk)
 """
 
 __version__ = "0.1.1"
-__author__ = 'Fred Castruccio (fredc@ucar.edu) | Chris Roberts (chris.roberts@ecmwf.int)'
-__credits__ = 'NCAR | ECMWF'
+__author__ = 'Fred Castruccio (fredc@ucar.edu) | Chris Roberts (chris.roberts@ecmwf.int) | Ollie Tooth (oliver.tooth@noc.ac.uk)'
+__credits__ = 'NCAR | ECMWF | NOC'

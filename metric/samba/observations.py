@@ -2,12 +2,13 @@
 Module containing code to work with SAMBA observational data
 
 """
-
+# -- Import required packages -- #
 import xarray as xr
-from netCDF4 import Dataset, num2date, date2num
+from netCDF4 import Dataset, num2date
 import datetime
 import numpy as np
-import metric.utils
+
+from metric import utils
 
 class SambaObs(object):
     """ Template class to interface with observed ocean transports """

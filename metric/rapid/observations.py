@@ -7,7 +7,7 @@ import xarray as xr
 from netCDF4 import Dataset, num2date, date2num
 import datetime
 import numpy as np
-import metric.utils
+from metric import utils
 
 class RapidObs(object):
     """ Template class to interface with observed ocean transports """
