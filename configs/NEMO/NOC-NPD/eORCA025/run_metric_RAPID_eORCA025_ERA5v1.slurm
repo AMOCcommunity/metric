@@ -34,7 +34,6 @@ source /path/to/my/venv/bin/activate
 # -- Run METRIC -- #
 echo "In Progress: Calculating RAPID 26N AMOC Diagnostics..."
 
-# Call metric script:
-./run_metric.py -c $fpath_config -t $fpath_T -s $fpath_T -v $fpath_V -ssh $fpath_T -taux $fpath_U
+metric run -c $fpath_config -t $fpath_T -s $fpath_T -v $fpath_V -ssh $fpath_T -taux $fpath_U
 
 echo "Completed: Calculated RAPID 26N AMOC Diagnostics."

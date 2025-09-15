@@ -34,7 +34,6 @@ source /path/to/my/venv/bin/activate
 # -- Run METRIC -- #
 echo "In Progress: Calculating MOVE 16N AMOC Diagnostics..."
 
-# Call metric script:
-./run_metric.py -c $fpath_config -t $fpath_T -s $fpath_T -v $fpath_V -ssh $fpath_T -taux $fpath_U
+metric run -c $fpath_config -t $fpath_T -s $fpath_T -v $fpath_V -ssh $fpath_T -taux $fpath_U
 
 echo "Completed: Calculated MOVE 16N AMOC Diagnostics."
