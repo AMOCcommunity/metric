@@ -13,7 +13,7 @@ name = "metric"
 description = "METRIC is a fork of the RapidMoc package, which extends the calculation of observation-style transports to other observing arrays."
 requires-python = ">=3.10"
 keywords = ["AMOC", "oceanography", "modelling", "analysis", "data"]
-authors = [{email = "oliver.tooth@noc.ac.uk"},{name = "Ollie Tooth"}]
+authors = [{email = "fredc@ucar.edu"}, {name = "Fred Castruccio"}, {email = "oliver.tooth@noc.ac.uk"},{name = "Ollie Tooth"}]
 maintainers = [{name = "Ollie Tooth", email = "oliver.tooth@noc.ac.uk"}]
 classifiers = [
   "Programming Language :: Python :: 3",
@@ -44,4 +44,4 @@ file = "LICENSE.txt"
 content-type = "text/txt"
 
 [project.urls]
-repository = "https://github.com/oj-tooth/metric"
+repository = "https://github.com/NCAR/metric"
