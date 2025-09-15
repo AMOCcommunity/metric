@@ -4,10 +4,8 @@
 
 <p align="center">
 </a>
-:rocket:
 <a href="https://AMOCcommunity.github.io/metric/"><strong>Documentation</strong></a>
 - 
-:exclamation:
 <a href="https://github.com/AMOCcommunity/metric/issues"><strong>Report an Issue</strong></a>
 </p>
 
