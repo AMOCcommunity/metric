@@ -1,5 +1,5 @@
 <p align="center">
-<img src="docs/assets/METRIC_logo_v1.jpg" alt="drawing" width="150"/>
+<img src="docs/assets/METRIC_logo_v1.png" alt="drawing" width="150"/>
 </p>
 
 <p align="center">
@@ -7,7 +7,7 @@
 :rocket:
 <a href="https://AMOCcommunity.github.io/metric/"><strong>Documentation</strong></a>
 - 
-:red_exclamation:
+:grey_exclamation:
 <a href="https://github.com/AMOCcommunity/metric/issues"><strong>Report an Issue</strong></a>
 </p>
 
