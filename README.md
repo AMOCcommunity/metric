@@ -7,14 +7,14 @@ estimates at various observational arrays from ocean general circulation models.
 
 The current version allows AMOC estimates at the RAPID (26.5N) array, the MOVE (16N) array, and the SAMBA (34.5S) array. METRIC also includes a few additional, alternative approaches to calculate these transports.
 
-In this latest version, the package has been updated to work with the latest versions of xarray and dask to allow users to calculate AMOC estimates from large multi-file datasets.
+In this latest version of METRIC, the package has been updated to utilise xarray and dask to allow users to calculate AMOC estimates from large multi-file datasets.
 
 Installing METRIC
 -------------
 
 **Downloading the code via SSH:**
 ```shell
-   git clone git@github.com:oj-tooth/metric.git
+   git clone git@github.com:NCAR/metric.git
 ```
 
 **Installing the updated METRIC package:**
