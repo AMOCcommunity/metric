@@ -31,16 +31,16 @@ def create_parser():
     parser.add_argument('-c', type=str, action='store', dest='config_file',
                         required=True, help='Path for netcdf file(s) containing temperature data.')
 
+    # Add METRIC CLI optional arguments:
     parser.add_argument('-t', type=str, action='store', dest='temperature_file',
-                        required=True, help='Path for netcdf file(s) containing temperature data.')
+                        required=False, help='Path for netcdf file(s) containing temperature data.')
 
     parser.add_argument('-s', type=str, action='store', dest='salinity_file',
-                        required=True, help='Path for netcdf file(s) containing salinity data.')
+                        required=False, help='Path for netcdf file(s) containing salinity data.')
 
     parser.add_argument('-v', type=str, action='store', dest='velocity_file',
-                        required=True, help='Path for netcdf file(s) containing meridional velocity data.')
+                        required=False, help='Path for netcdf file(s) containing meridional velocity data.')
 
-    # Add METRIC CLI optional arguments:
     parser.add_argument('-taux', type=str, action='store', dest='taux_file',
                         required=False, help='Path for netcdf file(s) containing zonal wind stress data.')
 

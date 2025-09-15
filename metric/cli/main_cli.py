@@ -10,8 +10,9 @@ Authors:
 """
 import sys
 import logging
-from metric.metric import compute_amoc_transport
 from .argument_parser import __version__, create_parser
+
+from metric.metric import compute_amoc_diagnostics, validate_amoc_diagnostics
 
 logger = logging.getLogger(__name__)
 
@@ -22,9 +23,9 @@ def metric_banner():
         f"""
 
     → → → → → → → → → → → → → → → →
-   ↑  ⦿──⦿──⦿──⦿──⦿──⦿──⦿──⦿──⦿  ↓
+   ↑  ⦿──⦿──⦿──⦿──⦿──⦿──⦿──⦿──⦿   ↓
    ↑            METRIC             ↓
-   ↑  ⦿──⦿──⦿──⦿──⦿──⦿──⦿──⦿──⦿  ↓
+   ↑  ⦿──⦿──⦿──⦿──⦿──⦿──⦿──⦿──⦿   ↓
     ← ← ← ← ← ← ← ← ← ← ← ← ← ← ← ←
 
         version: {__version__}
@@ -50,40 +51,49 @@ def process_action(args):
         args.parser.print_help()
         sys.exit(0)
 
-    # === Process Arguments === #
-    if 'move' in args['config_file']:
-        logging.info('Calculating MOVE AMOC transport using:')
-    elif 'rapid' in args['config_file']:
-        logging.info('Calculating RAPID AMOC transport using:')
-    elif 'samba' in args['config_file']:
-        logging.info('Calculating SAMBA SAMOC transport using:')
-    for key in args.keys():
-        if key == 'config_file':
-            logging.info('Path to config file: {}'.format(args[key]))
-        if key == 'temperature_file':
-            logging.info('Path to temperature file(s): {}'.format(args[key]))
-        if key == 'salinity_file':
-            logging.info('Path to salinity file(s): {}'.format(args[key]))
-        if key == 'velocity_file':
-            logging.info('Path to meridional velocity file(s): {}'.format(args[key]))
-        if key == 'ssh_file':
-            logging.info('Path to sea surface height file(s): {}'.format(args[key]))
-        if key == 'taux_file':
-            logging.info('Path to zonal wind stress file(s): {}'.format(args[key]))
-        if key == 'name':
-            logging.info('Output files name (Overrides value in config file): {}'.format(args[key]))
-        if key == 'outdir':
-            logging.info('Output data path (Overrides value in config file): {}'.format(args[key]))
-        if key == 'shift_date':
-            logging.info('Shift output dates for plotting such that the output time series start with {}'.format(args[key]))
-
     # === Process Actions === #
     if args['action'] == "run":
-        compute_amoc_transport(args)
+
+        # -- Process Run Arguments -- #
+        if 'move' in args['config_file'].lower():
+            logging.info('Calculating MOVE 16N AMOC diagnostics using:')
+        elif 'rapid' in args['config_file'].lower():
+            logging.info('Calculating RAPID 26.5N AMOC diagnostics using:')
+        elif 'samba' in args['config_file'].lower():
+            logging.info('Calculating SAMBA 34.5S AMOC diagnostics using:')
+        for key in args.keys():
+            if key == 'config_file':
+                logging.info('Path to config file: {}'.format(args[key]))
+            if key == 'temperature_file':
+                logging.info('Path to temperature file(s): {}'.format(args[key]))
+            if key == 'salinity_file':
+                logging.info('Path to salinity file(s): {}'.format(args[key]))
+            if key == 'velocity_file':
+                logging.info('Path to meridional velocity file(s): {}'.format(args[key]))
+            if key == 'ssh_file':
+                logging.info('Path to sea surface height file(s): {}'.format(args[key]))
+            if key == 'taux_file':
+                logging.info('Path to zonal wind stress file(s): {}'.format(args[key]))
+            if key == 'name':
+                logging.info('Output files name (Overrides value in config file): {}'.format(args[key]))
+            if key == 'outdir':
+                logging.info('Output data path (Overrides value in config file): {}'.format(args[key]))
+            if key == 'shift_date':
+                logging.info('Shift output dates for plotting such that the output time series start with {}'.format(args[key]))
+        
+        # -- Compute AMOC diagnostics -- #
+        compute_amoc_diagnostics(args)
     
     elif args['action'] == "validate":
-        print("Validation of AMOC diagnostics is currently under development.")
-        # validate_amoc_diags()
+
+        # -- Process Validate Arguments -- #
+        if 'rapid' in args['config_file'].lower():
+            logging.info('Validating RAPID 26.5N AMOC diagnostics using:')
+        for key in args.keys():
+            if key == 'config_file':
+                logging.info('Path to config file: {}'.format(args[key]))
+
+        validate_amoc_diagnostics(args)
 
     else:
         raise NotImplementedError(f"metric {args['action']} not implemented. Choose from 'run' or 'validate'.")

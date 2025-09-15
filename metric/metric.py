@@ -8,15 +8,19 @@ Authors:
 """
 # -- Import required packages -- #
 import os
-import errno
 import glob
+import errno
+import xarray as xr
+from metric import utils, sections, rapid, move, samba
+from metric.rapid.validation import make_rapid_validation_report
 
-from . import utils, sections, rapid, move, samba
 
-
-
-def compute_amoc_transport(args):
+def compute_amoc_diagnostics(args):
     """ Parse options and compute amoc """
+    # Read configuration file
+    if not utils.path.exists(args['config_file']):
+      raise FileNotFoundError(errno.ENOENT, os.strerror(errno.ENOENT), args['config_file'])
+  
     config = utils.get_config(args)
 
     # Update name in config file
@@ -36,8 +40,6 @@ def compute_amoc_transport(args):
         config.set('options', 'eos', 'teos10')
 
     # Check files and options 
-    if not utils.path.exists(args['config_file']):
-      raise FileNotFoundError(errno.ENOENT, os.strerror(errno.ENOENT), args['config_file'])
     if not glob.glob(args['temperature_file']):
       raise FileNotFoundError(errno.ENOENT, os.strerror(errno.ENOENT), args['temperature_file'])
     if not glob.glob(args['salinity_file']):
@@ -87,13 +89,13 @@ def compute_amoc_transport(args):
       trans = move.transports.calc_transports_from_sections(
           config, v, t_on_v, s_on_v, ssh_on_v)
       # Plot diagnostics                                                                                                      
-      if config.getboolean('output','plot'):                                                                                   
+      if config.getboolean('output','plot'):                                                          
         move.plotdiag.plot_diagnostics(config, trans)
     elif config.get('options','array') == 'RAPID':
       trans = rapid.transports.calc_transports_from_sections(
           config, v, tau, t_on_v, s_on_v, ssh_on_v)
       # Plot diagnostics                                                                                                      
-      if config.getboolean('output','plot'):                                                                                   
+      if config.getboolean('output','plot'):                                                                          
         rapid.plotdiag.plot_diagnostics(config, trans)
     elif config.get('options','array') == 'SAMBA':
       trans = samba.transports.calc_transports_from_sections(
@@ -102,12 +104,41 @@ def compute_amoc_transport(args):
       if config.getboolean('output','plot'):                                                                                   
         samba.plotdiag.plot_diagnostics(config, trans)
 
-    # Write data
-    #print 'SAVING: %s' % trans.filepath()
+    # Write data to netcdf:
     trans.close()
 
 
+def validate_amoc_diagnostics(args):
+    """
+    Validate AMOC diagnostics against observations.
+    """
+    # -- Read configuration file -- #
+    if not utils.path.exists(args['config_file']):
+      raise FileNotFoundError(errno.ENOENT, os.strerror(errno.ENOENT), args['config_file'])
 
+    config = utils.get_config(args)
+    array_name = config.get('options','array')
+    model_name=config.get('validation','model_name')
+    ensemble = config.getboolean('validation','ensemble')
+    reportdir = config.get('validation','reportdir')
 
+    if config.get('validation','outfilepath') is None:
+      raise RuntimeError('Path for METRIC AMOC diagnostics netcdf file must be provided for validation.')
+    outfilepath = os.path.join(reportdir, config.get('validation','outfilepath'))
 
+    if config.get('validation','reportdir') is None:
+      raise RuntimeError('Directory path for validation report .pdf must be provided.')
+    reportfilepath = f"{reportdir}/{config.get('output','name')}_{array_name}_validation_report.pdf"
 
+    # -- Open METRIC AMOC diagnostics output -- #
+    ds_mdl = xr.open_dataset(outfilepath)
+
+    # -- Generate METRIC validation report -- #
+    if array_name == 'RAPID':
+      make_rapid_validation_report(model_ds=ds_mdl,
+                                  model_name=model_name,
+                                  output_pdf=reportfilepath,
+                                  ensemble=ensemble
+                                  )
+    else:
+      raise NotImplementedError(f"Validation for {array_name} array not yet implemented.")
