@@ -15,16 +15,19 @@ classifiers = [
 ]
 
 dependencies = [
+  "aiohttp",
   "argparse",
   "ConfigParser",
-  "scipy",
-  "matplotlib",
-  "netcdf4",
   "dask[complete]>=2024.10.0",
+  "fpdf2",
   "gsw>=3.6.19",
   "h5netcdf>=1.4.0",
-  "xarray[accel]>=2024.10.0",
+  "matplotlib",
+  "netcdf4",
+  "requests",
   "numpy>=1.26.4",
+  "scipy",
+  "xarray[accel]>=2024.10.0",
   "zarr>=2.18.3",
   ]
 
