@@ -94,3 +94,9 @@ plot=False
 #shift_date=20150115
 outdir=/glade/scratch/fredc/metric_output/g.e20.G.TL319_t13.control.001/
 name=g.e20.G.TL319_t13.control.001
+
+[validation]
+model_name = g.e20.G.TL319_t13.control.001
+ensemble = False
+outfilepath = /glade/scratch/fredc/metric_output/g.e20.G.TL319_t13.control.001/g.e20.G.TL319_t13.control.001_2000-01-2009-12_natl_meridional_transports_at_26N.nc
+reportdir = /glade/scratch/fredc/metric_output/g.e20.G.TL319_t13.control.001/
