@@ -16,16 +16,17 @@ Meridional ovErTurning ciRculation diagnostIC (**METRIC**) is a Python package f
 
 ### Background
 
-METRIC originated as a fork of the [**RapidMoc**](https://github.com/cdr30/RapidMoc) package, which enabled observational-equivalent calculations to performed along the RAPID (26.5N) array in ocean models.
+METRIC originated as a fork of the [**RapidMoc**](https://github.com/cdr30/RapidMoc) package, which enabled users to perform observational-equivalent calculations along the RAPID (26.5°N) array in ocean models.
 
 The latest version of METRIC extends this to allow users to estimate overturning, heat and freshwater transports at:
 
-- **RAPID (26.5N) array**
-- **MOVE (16N) array**
-- **SAMBA (34.5S) array**
+- **RAPID (26.5°N) array**
+- **MOVE (16°N) array**
+- **SAMBA (34.5°S) array**
 
-METRIC also includes the option to use alternative observational approaches to estimate meridional transports.
+METRIC also includes the option to use alternative observational approaches when estimating meridional volume, heat and freshwater transports.
 
+A new experimental feature is the `metric validate` automated validation feature, which generates a PDF report comparing a given ocean model to available RAPID 26.5°N observations.
 
 ## Getting Started:
 
@@ -39,21 +40,27 @@ pip install git+https://github.com/AMOCcommunity/metric.git
 
 ### Using METRIC
 
-Once **METRIC** has been installed, users can use the command-line interface to calculate AMOC diagnostics at the RAPID, MOVE, and SAMBA observing arrays and write outputs to a single netCDF file:
+Once **METRIC** has been installed, users can use the `metric` command-line interface to calculate AMOC diagnostics at the RAPID 26.5°N, MOVE 16°N, and SAMBA 34.5°S observing arrays and write outputs to a single netCDF file:
 
 ```shell
    metric run [-c] [-t] [-s] [-v] [-ssh] [-taux]
 ```
 
+After producing AMOC diagnostics at RAPID 26.5°N, users can then generate figures and a PDF report validating their ocean general circulation model against available observations using:
+
+```shell
+   metric validate [-c]
+```
+
    #### Required Arguments:
    **-c** = Path to configuration file.\
+
+   #### Optional Arguments:
    **-t** = Path to netcdf file containing temperature data.\
    **-s** = Path to netcdf file containing salinity data.\
    **-v** = Path to netcdf file containing meridional velocity data.\
    **-ssh** = Path to netcdf file containing sea surface height data.\
    **-taux** = Path to netcdf file containing zonal wind stress data.
-
-   #### Optional Arguments:
    **--outdir** = Path to output directory (overwrites configuration file).\
    **--name** = Name of the output file (overwrites configuration file).\
    **--shift** = Shift output dates for plotting.
@@ -63,6 +70,12 @@ Once **METRIC** has been installed, users can use the command-line interface to 
 Example configuration files for **POP** and **NEMO** ocean model outputs are provided for users in the `configs` directory.
 
 Users will also find two example workflows, including SLURM job submission scripts, to run **METRIC** with large multi-file datasets in `configs/NEMO/NOC/`.
+
+## Coming Soon:
+
+* **Validation workflows for MOVE 16°N & SAMBA 34.5°S.
+* AMOC Diagnostics for NOAC 47N.
+* AMOC Diagnostics for OSNAP.
 
 ## Citations
 
