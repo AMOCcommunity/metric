@@ -1,8 +1,10 @@
 """
-Module containing main routines to execute METRIC
+Module containing main routines to calculate
+METRIC AMOC diagnostics.
 
-Updated by: Ollie Tooth
-Date: 2025-09-15
+Authors:
+    - Fred Castruccio
+    - Ollie Tooth
 """
 # -- Import required packages -- #
 import os
@@ -13,65 +15,64 @@ from . import utils, sections, rapid, move, samba
 
 
 
-def compute_amoc_transport(line_args):
+def compute_amoc_transport(args):
     """ Parse options and compute amoc """
-    args = utils.get_args(line_args)
     config = utils.get_config(args)
 
     # Update name in config file
-    if args.name is not None:
-        config.set('output', 'name', args.name)
+    if args['name'] is not None:
+        config.set('output', 'name', args['name'])
 
     # Update outdir in config file
-    if args.outdir is not None:
-        config.set('output', 'outdir', args.outdir)
+    if args['outdir'] is not None:
+        config.set('output', 'outdir', args['outdir'])
 
     # Update shift_date in config file
-    if args.shift_date is not None:
-        config.set('output', 'shift_date', args.shift_date)
+    if args['shift_date'] is not None:
+        config.set('output', 'shift_date', args['shift_date'])
 
     # Update shift_date in config file
     if utils.get_config_opt(config, 'options', 'eos') is None:
         config.set('options', 'eos', 'teos10')
 
     # Check files and options 
-    if not utils.path.exists(args.config_file):
-      raise FileNotFoundError(errno.ENOENT, os.strerror(errno.ENOENT), args.config_file)
-    if not glob.glob(args.temp_file):
-      raise FileNotFoundError(errno.ENOENT, os.strerror(errno.ENOENT), args.temp_file)
-    if not glob.glob(args.salt_file):
-      raise FileNotFoundError(errno.ENOENT, os.strerror(errno.ENOENT), args.salt_file)
-    if not glob.glob(args.vel_file):
-      raise FileNotFoundError(errno.ENOENT, os.strerror(errno.ENOENT), args.vel_file)
-    if args.taux_file:
-      if not glob.glob(args.taux_file):
-        raise FileNotFoundError(errno.ENOENT, os.strerror(errno.ENOENT), args.taux_file)
-    if args.ssh_file:
-      if not glob.glob(args.ssh_file):
-        raise FileNotFoundError(errno.ENOENT, os.strerror(errno.ENOENT), args.ssh_file)
+    if not utils.path.exists(args['config_file']):
+      raise FileNotFoundError(errno.ENOENT, os.strerror(errno.ENOENT), args['config_file'])
+    if not glob.glob(args['temperature_file']):
+      raise FileNotFoundError(errno.ENOENT, os.strerror(errno.ENOENT), args['temperature_file'])
+    if not glob.glob(args['salinity_file']):
+      raise FileNotFoundError(errno.ENOENT, os.strerror(errno.ENOENT), args['salinity_file'])
+    if not glob.glob(args['velocity_file']):
+      raise FileNotFoundError(errno.ENOENT, os.strerror(errno.ENOENT), args['velocity_file'])
+    if args['taux_file']:
+      if not glob.glob(args['taux_file']):
+        raise FileNotFoundError(errno.ENOENT, os.strerror(errno.ENOENT), args['taux_file'])
+    if args['ssh_file']:
+      if not glob.glob(args['ssh_file']):
+        raise FileNotFoundError(errno.ENOENT, os.strerror(errno.ENOENT), args['ssh_file'])
 
     if config.get('options','array') == 'RAPID':
-      if not args.taux_file:
+      if not args['taux_file']:
         raise RuntimeError('Path for netcdf file(s) containing zonal wind stress data must be provided for RAPID array.')
 
     if config.get('options','array') == 'SAMBA':
-      if not args.taux_file:
+      if not args['taux_file']:
         raise RuntimeError('Path for netcdf file(s) containing zonal wind stress data must be provided for SAMBA array.')
 
     if config.getboolean('options', 'td_geo'):
-      if not args.ssh_file:
-        raise RuntimeError('Path for netcdf file(s) containing Sea Surface Height data must be provided for top-down geostrophic method')    
+      if not args['ssh_file']:
+        raise RuntimeError('Path for netcdf file(s) containing Sea Surface Height data must be provided for top-down geostrophic method')
 
     # Read data
-    t = sections.ZonalSections(args.temp_file, config, 'temperature')
-    s = sections.ZonalSections(args.salt_file, config, 'salinity')
-    v = sections.ZonalSections(args.vel_file, config, 'meridional_velocity')
+    t = sections.ZonalSections(args['temperature_file'], config, 'temperature')
+    s = sections.ZonalSections(args['salinity_file'], config, 'salinity')
+    v = sections.ZonalSections(args['velocity_file'], config, 'meridional_velocity')
     if config.get('options','array') == 'RAPID':
-      tau = sections.ZonalSections(args.taux_file, config, 'taux')
+      tau = sections.ZonalSections(args['taux_file'], config, 'taux')
     if config.get('options','array') == 'SAMBA':
-      tau = sections.ZonalSections(args.taux_file, config, 'taux')
+      tau = sections.ZonalSections(args['taux_file'], config, 'taux')
     if config.getboolean('options', 'td_geo'):
-      ssh = sections.ZonalSections(args.ssh_file, config, 'ssh')
+      ssh = sections.ZonalSections(args['ssh_file'], config, 'ssh')
 
     # Interpolate T & S data onto v-grid
     t_on_v = sections.interpolate(t, v)

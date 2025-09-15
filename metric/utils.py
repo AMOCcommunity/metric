@@ -1,9 +1,11 @@
 """
 Module containing utility functions
 
+Authors:
+    - Fred Castruccio
+    - Ollie Tooth
 """
 # -- Import required packages -- #
-import argparse as ap
 import configparser
 from os import path
 
@@ -14,39 +16,11 @@ import cftime
 class ShapeError(Exception):
     pass
 
-def get_args(line_args=None):
-    """   Get arguments from command line.  """
-
-    parser = ap.ArgumentParser(
-        description='Gathers from command line to calculate AMOC diagnostics using ocean model data.')
-    parser.add_argument('-c', type=str, action='store', dest='config_file',
-                        required=True, help='Path for netcdf file(s) containing temperature data.')
-    parser.add_argument('-t', type=str, action='store', dest='temp_file',
-                        required=True, help='Path for netcdf file(s) containing temperature data.')
-    parser.add_argument('-s', type=str, action='store', dest='salt_file',
-                        required=True, help='Path for netcdf file(s) containing salinity data.')
-    parser.add_argument('-v', type=str, action='store', dest='vel_file',
-                        required=True, help='Path for netcdf file(s) containing meridional velocity data.')
-    parser.add_argument('-taux', type=str, action='store', dest='taux_file',
-                        required=False, help='Path for netcdf file(s) containing zonal wind stress data.')
-    parser.add_argument('-ssh', type=str, action='store', dest='ssh_file',
-                        required=False, help='Path for netcdf file(s) containing Sea Surface Height data.')
-    parser.add_argument('--name', type=str, action='store', dest='name', 
-                        default=None, help='Name used in output files. Overrides value in config file.')
-    parser.add_argument('--outdir', type=str, action='store', dest='outdir',
-                        default=None, help='Path used for output data. Overrides value in config file.')
-    parser.add_argument('--shift', type=str, action='store', dest='shift_date',
-                        default=None, help='Shift dates.')
-    # Gather the provided arguements as an array.
-    args = parser.parse_args(line_args)
-
-    return args
-
 
 def get_config(args):
     """ Return configuration options as <configparser> object. """
     config = configparser.ConfigParser()
-    config.read(args.config_file)
+    config.read(args['config_file'])
 
     return config
 
