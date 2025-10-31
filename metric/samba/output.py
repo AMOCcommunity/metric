@@ -5,8 +5,9 @@ Authors:
     - Fred Castruccio
 """
 # -- Import required packages -- #
-from netCDF4 import Dataset, default_fillvals
+from netCDF4 import Dataset, default_fillvals, date2num
 import numpy as np
+import cftime
 import os
 
 from metric import utils
@@ -32,9 +33,12 @@ def open_ncfile(config, dates):
       else:
         suffix='_natl_meridional_transports_at_34_5S.nc'
 
-    savef = utils.get_savename(
-        outdir, name, dates, date_format,
-        suffix=suffix)
+    savef = utils.get_savename(outdir=outdir,
+                              name=name,
+                              dates=dates,
+                              date_format=date_format,
+                              suffix=suffix
+                              )
     dataset = Dataset(savef, 'w', format='NETCDF4_CLASSIC')
 
     return dataset
@@ -72,11 +76,19 @@ def create_netcdf(config, samba_trans, model_trans, wbw_trans,
 
     # Create time coordinate:
     time = dataset.createVariable('time',np.float64,(tdim.name,))
-    time.units = 'seconds since 1900-01-01 00:00:00.0'
-    time.calendar = 'gregorian'
     # Calculate timestamp in seconds since 1900-01-01:
-    timestamp = ((samba_trans.dates - np.datetime64('1900-01-01T00:00:00'))
-                 / np.timedelta64(1, 's'))
+    time.units = 'seconds since 1900-01-01 00:00:00.0'
+
+    if isinstance(samba_trans.dates[0], cftime.datetime):
+      time.calendar = utils.get_cftime_calendar(samba_trans.dates)
+      timestamp = date2num(samba_trans.dates, units=time.units, calendar=time.calendar)
+    elif isinstance(samba_trans.dates[0], np.datetime64):
+      time.calendar = 'gregorian'
+      timestamp = ((samba_trans.dates - np.datetime64('1900-01-01T00:00:00'))
+                  / np.timedelta64(1, 's'))
+    else:
+      raise TypeError(f"Invalid type ({type(samba_trans.dates[0])}) for {tdim.name} coordinate. Expected cftime.datetime or np.datetime64.")
+
     time[:] = timestamp
 
     # Create depth coordinate
