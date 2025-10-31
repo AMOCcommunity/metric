@@ -15,6 +15,7 @@ from math import radians, cos, sin, asin, sqrt
 import xarray as xr
 import numpy as np
 import copy
+import cftime
 import glob
 import os
 import json
@@ -370,7 +371,7 @@ class ZonalSections(object):
             ds = ds[self.var][:, :, self.j1:self.j2+1, self.i1:self.i2+1]
 
         # Convert time coordinate to datetime64 if possible:
-        if not np.issubdtype(ds[self.tcoord].dtype, np.datetime64):
+        if not np.issubdtype(ds[self.tcoord].dtype, np.datetime64) | np.issubdtype(ds[self.tcoord].dtype, cftime.datetime):
 
             # Reassign time coordinate using time_centered if not CFTimeIndex:
             if not np.issubdtype(ds[self.tcoord].dtype, xr.CFTimeIndex):
@@ -385,7 +386,10 @@ class ZonalSections(object):
         return ds
 
     def _read_data(self):
-        """ Read variable & coordinate data from netcdf file(s) """
+        """
+        Read variable & coordinate data from netcdf file(s)
+        """
+        coder = xr.coders.CFDatetimeCoder(time_unit="s")
         if len(glob.glob(self.file)) > 1:
             if self.use_dask:
                 # Set dask temporary and local directories to current working directory:
@@ -394,7 +398,12 @@ class ZonalSections(object):
                 # Open dask cluster and client to read multiple netcdf files:
                 with LocalCluster(**self.dask_kwargs) as cluster, Client(cluster) as client:
                     print(client.dashboard_link)
-                    ds = xr.open_mfdataset(paths=self.file, preprocess=self._extract_section, engine='h5netcdf', parallel=True)
+                    ds = xr.open_mfdataset(paths=self.file,
+                                           preprocess=self._extract_section,
+                                           decode_times=coder,
+                                           engine='h5netcdf',
+                                           parallel=True
+                                           )
                     data = ds[self.var].load()
                     print(f"... Completed: Read {self.var} from multiple .nc files with dask.")
                     # Shutdown dask client and close cluster:
@@ -404,12 +413,16 @@ class ZonalSections(object):
             else:
                 print(f"In Progress: Reading {self.var} from multiple .nc files without dask ...")
                 # Open multiple netcdf files as dataset using pre-processing function & load into memory:
-                ds = xr.open_mfdataset(paths=self.file, preprocess=self._extract_section, engine='h5netcdf')
+                ds = xr.open_mfdataset(paths=self.file,
+                                       preprocess=self._extract_section,
+                                       decode_times=coder,
+                                       engine='h5netcdf'
+                                       )
                 data = ds[self.var].load()
                 print(f"... Completed: Read {self.var} from multiple .nc files without dask.")
         else:
             # Open single netcdf file as dataset:
-            ds = xr.open_dataset(self.file, engine='h5netcdf')
+            ds = xr.open_dataset(self.file, decode_times=coder, engine='h5netcdf')
             # Apply post-processing function to extract variable data:
             data = self._extract_section(ds)
 
