@@ -49,10 +49,35 @@ def get_ncdates(config, nc, tvar='time'):
 
 def get_datestr(dates, date_format):
     """ Return string of form 'mindate-maxdate' for specified format """
-    datestr = '%s-%s' % (np.datetime_as_string(dates[0], unit=date_format), 
-                         np.datetime_as_string(dates[-1], unit=date_format))
-    
+    # Create date string from CFTime datetime objects:
+    if isinstance(dates[0], cftime.datetime):
+        if date_format == "Y":
+            fmt = "%Y"
+        elif date_format == "M":
+            fmt = "%Y-%m"
+        elif date_format == "D":
+            fmt = "%Y-%m-%d"
+        else:
+            raise ValueError(f"Invalid date_format: '{date_format}'. Options are 'Y', 'M', 'D'.")
+        datestr = f"{dates[0].strftime(fmt)}-{dates[-1].strftime(fmt)}"
+    # Create date string from numpy datetime64:
+    elif isinstance(dates[0], np.datetime64):
+        datestr = '%s-%s' % (np.datetime_as_string(dates[0], unit=date_format), 
+                            np.datetime_as_string(dates[-1], unit=date_format))
+    else:
+        raise TypeError(f"Invalid type ({type(dates[0])}) for dates. Expected cftime.datetime or np.datetime64.")
+
     return datestr
+
+
+def get_cftime_calendar(times):
+    """ Return calendar of cftime datetime array. """
+    clsname = times[0].__class__.__name__
+    calendar = clsname.replace("Datetime", "").lower()
+    if calendar.endswith("day"):
+        calendar = calendar.replace("day", "_day")
+
+    return calendar
 
 
 def get_savename(outdir, name, dates, date_format, suffix=''):
