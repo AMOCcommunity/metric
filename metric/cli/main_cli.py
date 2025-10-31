@@ -23,9 +23,7 @@ def metric_banner():
         f"""
 
     → → → → → → → → → → → → → → → →
-   ↑  ⦿──⦿──⦿──⦿──⦿──⦿──⦿──⦿──⦿   ↓
    ↑            METRIC             ↓
-   ↑  ⦿──⦿──⦿──⦿──⦿──⦿──⦿──⦿──⦿   ↓
     ← ← ← ← ← ← ← ← ← ← ← ← ← ← ← ←
 
         version: {__version__}
@@ -39,7 +37,7 @@ def initialise_logging():
     """Initialise METRIC logging configuration."""
     logging.basicConfig(
         stream=sys.stdout,
-        format="⦿──⦿  METRIC  ⦿──⦿  | %(levelname)10s | %(asctime)s | %(message)s",
+        format="→ →  METRIC  ← ←  | %(levelname)10s | %(asctime)s | %(message)s",
         level=logging.INFO,
         datefmt="%Y-%m-%d %H:%M:%S",
     )
