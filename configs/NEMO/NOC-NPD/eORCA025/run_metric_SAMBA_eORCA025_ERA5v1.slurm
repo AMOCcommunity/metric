@@ -29,7 +29,8 @@ fpath_U="/dssgfs01/scratch/npd/simulations/eORCA025_ERA5_v1/eORCA025_ERA5_1m_gri
 
 # -- Python Environment -- #
 # Activate virtual environment:
-source /path/to/my/venv/bin/activate
+source /home/otooth/miniconda3/etc/profile.d/conda.sh
+conda activate /dssgfs01/working/otooth/Software/conda_envs/env_metric
 
 # -- Run METRIC -- #
 echo "In Progress: Calculating SAMBA 34.5S AMOC Diagnostics..."
