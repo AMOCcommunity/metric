@@ -23,13 +23,14 @@ GLOBIGNORE="*"
 # Filepaths to config file:
 fpath_config="./config_RAPID_eORCA1.ini"
 # Filepaths to eORCA1 monthly mean output files:
-fpath_T="/dssgfs01/scratch/npd/simulations/eORCA1_ERA5_v1/eORCA1_ERA5_1m_grid_T*.nc"
-fpath_V="/dssgfs01/scratch/npd/simulations/eORCA1_ERA5_v1/eORCA1_ERA5_1m_grid_V*.nc"
-fpath_U="/dssgfs01/scratch/npd/simulations/eORCA1_ERA5_v1/eORCA1_ERA5_1m_grid_U*.nc"
+fpath_T="/dssgfs01/scratch/npd/simulations/eORCA1_ERA5_v1/eORCA1_ERA5_1m_grid_T_*.nc"
+fpath_V="/dssgfs01/scratch/npd/simulations/eORCA1_ERA5_v1/eORCA1_ERA5_1m_grid_V_*.nc"
+fpath_U="/dssgfs01/scratch/npd/simulations/eORCA1_ERA5_v1/eORCA1_ERA5_1m_grid_U_*.nc"
 
 # -- Python Environment -- #
 # Activate virtual environment:
-source /path/to/my/venv/bin/activate
+source /home/otooth/miniconda3/etc/profile.d/conda.sh
+conda activate /dssgfs01/working/otooth/Software/conda_envs/env_metric
 
 # -- Run METRIC -- #
 echo "In Progress: Calculating RAPID 26N AMOC Diagnostics..."
