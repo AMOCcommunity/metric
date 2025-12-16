@@ -854,9 +854,9 @@ def _load_rapid_obs():
         Tuple containing the in-memory RAPID-MOCHA observational datasets.
     """
     # Open Zarr stores as xr.Datasets from JASMIN Object Store:
-    moc_transports = xr.open_zarr("https://noc-msm-o.s3-ext.jc.rl.ac.uk/ocean-obs/RAPID/moc_transports_v2023.1", consolidated=True)
-    moc_vertical = xr.open_zarr("https://noc-msm-o.s3-ext.jc.rl.ac.uk/ocean-obs/RAPID/moc_vertical_v2023.1", consolidated=True)
-    meridional_transports = xr.open_zarr("https://noc-msm-o.s3-ext.jc.rl.ac.uk/ocean-obs/RAPID/meridional_transports_v2023.1", consolidated=True)
+    moc_transports = xr.open_zarr("https://noc-msm-o.s3-ext.jc.rl.ac.uk/ocean-obs/RAPID/moc_transports_v2024.1", consolidated=True)
+    moc_vertical = xr.open_zarr("https://noc-msm-o.s3-ext.jc.rl.ac.uk/ocean-obs/RAPID/moc_vertical_v2024.1", consolidated=True)
+    meridional_transports = xr.open_zarr("https://noc-msm-o.s3-ext.jc.rl.ac.uk/ocean-obs/RAPID/meridional_transports_v2024.1", consolidated=True)
 
     time_coder = xr.coders.CFDatetimeCoder(use_cftime=True)
     mocha_mht = xr.open_zarr("https://noc-msm-o.s3-ext.jc.rl.ac.uk/ocean-obs/RAPID/mocha_mht_data_ERA5_v2020", consolidated=True, decode_times=time_coder)
@@ -886,7 +886,8 @@ def _process_data(
     obs_vol: xr.Dataset,
     obs_sf: xr.Dataset,
     obs_oht: xr.Dataset,
-    obs_oft: xr.Dataset
+    obs_oft: xr.Dataset,
+    monthly_mean: bool = True
     ):
     """
     Subset & load the model and observation datasets
@@ -906,6 +907,8 @@ def _process_data(
         RAPID-MOCHA ocean heat transport dataset.
     obs_oft : xr.Dataset
         RAPID-MOCHA ocean freshwater transport dataset.
+    monthly_mean : bool, default=True
+        Whether to resample the observational datasets to monthly means.
 
     Returns
     -------
@@ -928,11 +931,20 @@ def _process_data(
         min([model_ds['time'].max(), obs_vol['time'].max(), obs_sf['time'].max(),
              obs_oht['time'].max(), obs_oft['time'].max()])
     )
+
     model_rapid = model_ds.sel(time=rapid_trange).load()
-    obs_vol = obs_vol.sel(time=rapid_trange).load()
-    obs_sf = obs_sf.sel(time=rapid_trange).load()
-    obs_oht = obs_oht.sel(time=rapid_trange).load()
-    obs_oft = obs_oft.sel(time=rapid_trange).load()
+
+    # Optional observational resampling to monthly means:
+    if monthly_mean:
+        obs_vol = obs_vol.sel(time=rapid_trange).load().resample(time="1ME").mean()
+        obs_sf = obs_sf.sel(time=rapid_trange).load().resample(time="1ME").mean()
+        obs_oht = obs_oht.sel(time=rapid_trange).load().resample(time="1ME").mean()
+        obs_oft = obs_oft.sel(time=rapid_trange).load().resample(time="1ME").mean()
+    else:
+        obs_vol = obs_vol.sel(time=rapid_trange).load()
+        obs_sf = obs_sf.sel(time=rapid_trange).load()
+        obs_oht = obs_oht.sel(time=rapid_trange).load()
+        obs_oft = obs_oft.sel(time=rapid_trange).load()
 
     return model_fc, obs_fc, model_rapid, obs_vol, obs_sf, obs_oht, obs_oft
 
@@ -953,6 +965,7 @@ def make_rapid_validation_report(
     model_name: str,
     output_pdf: str,
     ensemble: bool = False,
+    monthly_mean: bool = False
     ) -> None:
     """
     Generate RAPID 26.5N validation report comparing model diagnostics
@@ -968,6 +981,8 @@ def make_rapid_validation_report(
         Output file path for the validation report PDF.
     ensemble : bool, default=False
         Whether to plot model ensemble average and spread.
+    monthly_mean : bool, default=False
+        Whether to resample observational datasets to monthly means.
     """
     # -- Create Output Directory -- #
     os.makedirs("figures/", exist_ok=True)
@@ -979,7 +994,7 @@ def make_rapid_validation_report(
     logging.info("Completed: Read RAPID 26.5N Observations")
 
     logging.info("In Progress: Processing Model & Observation Diagnostics")
-    model_fc, obs_fc, model_rapid, obs_vol, obs_sf, obs_oht, obs_oft = _process_data(model_ds, obs_fc, obs_vol, obs_sf, obs_oht, obs_oft)
+    model_fc, obs_fc, model_rapid, obs_vol, obs_sf, obs_oht, obs_oft = _process_data(model_ds, obs_fc, obs_vol, obs_sf, obs_oht, obs_oft, monthly_mean)
     logging.info("Completed: Processed Model & Observation Diagnostics")
 
     if ensemble:
@@ -993,7 +1008,8 @@ def make_rapid_validation_report(
     # --- Introduction (page 0) --- #
     logging.info("In Progress: Preparing Introduction, Methodology & Summary Pages")
     pdf.add_page()
-    logo_file = os.path.abspath("../../../../docs/assets/METRIC_logo_v1.jpg")
+    project_dir = os.path.join(os.path.dirname(__file__), "..", "..")
+    logo_file = os.path.join(project_dir, "docs", "assets", "METRIC_logo_v1.jpg")
     pdf.image(logo_file, x=10, w=30)
     pdf.ln(1)
     pdf.set_font("Helvetica", "B", 16)

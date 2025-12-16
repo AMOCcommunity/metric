@@ -120,6 +120,7 @@ def validate_amoc_diagnostics(args):
     array_name = config.get('options','array')
     model_name=config.get('validation','model_name')
     ensemble = config.getboolean('validation','ensemble')
+    monthly_mean = config.getboolean('validation','monthly_mean')
     reportdir = config.get('validation','reportdir')
 
     if config.get('validation','outfilepath') is None:
@@ -138,7 +139,8 @@ def validate_amoc_diagnostics(args):
       make_rapid_validation_report(model_ds=ds_mdl,
                                   model_name=model_name,
                                   output_pdf=reportfilepath,
-                                  ensemble=ensemble
+                                  ensemble=ensemble,
+                                  monthly_mean=monthly_mean
                                   )
     else:
       raise NotImplementedError(f"Validation for {array_name} array not yet implemented.")
